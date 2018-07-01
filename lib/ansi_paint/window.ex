@@ -36,18 +36,9 @@ defmodule Window do
     new_x,
     content_width
   ) do
-    new_cursor_x = new_x - scroll_x
-    cond do
-      new_cursor_x < 0 ->
-        %__MODULE__{window | cursor_x: 0, scroll_x: max(0, new_x)}
-      new_cursor_x >= width ->
-        %__MODULE__{window |
-          cursor_x: width - 1,
-          scroll_x: min(content_width - width, new_x - width + 1)
-        }
-      true ->
-        %__MODULE__{window | cursor_x: new_cursor_x}
-    end
+    {new_cursor_x, new_scroll_x} =
+      change_cursor_pos(width, scroll_x, new_x, content_width)
+    %__MODULE__{window | cursor_x: new_cursor_x, scroll_x: new_scroll_x}
   end
 
   def change_cursor_y(
@@ -55,17 +46,23 @@ defmodule Window do
     new_y,
     content_height
   ) do
-    new_cursor_y = new_y - scroll_y
+    {new_cursor_y, new_scroll_y} =
+      change_cursor_pos(height, scroll_y, new_y, content_height)
+    %__MODULE__{window | cursor_y: new_cursor_y, scroll_y: new_scroll_y}
+  end
+
+  defp change_cursor_pos(window_size, scroll, new_value, content_size) do
+    new_cursor = new_value - scroll
     cond do
-      new_cursor_y < 0 ->
-        %__MODULE__{window | cursor_y: 0, scroll_y: max(0, new_y)}
-      new_cursor_y >= height ->
-        %__MODULE__{window |
-          cursor_y: height - 1,
-          scroll_y: min(content_height - height, new_y - height + 1)
+      new_cursor < 0 ->
+        {0, max(0, new_value)}
+      new_cursor >= window_size ->
+        {
+          window_size - 1,
+          min(content_size - window_size, new_value - window_size + 1)
         }
       true ->
-        %__MODULE__{window | cursor_y: new_cursor_y}
+        {new_cursor, scroll}
     end
   end
 end
