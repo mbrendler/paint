@@ -14,7 +14,7 @@ defmodule State do
       color: "#{Tput.op()} ",
       image: image,
       main: Window.new(0, 0, width, height - 2),
-      status: Window.new(0, height - 2, width, 1),
+      status: StatusLine.new(height - 2, width),
       command: Window.new(0, height - 1, width, 1)
     }
   end
