@@ -52,14 +52,26 @@ defmodule Commands do
 
   def pick(state), do: %{state | color: State.current_color(state)}
 
-  def set(%{main: main, image: image, color: color} = state) do
-    %{state | image: Image.set(image, main.cursor_x, main.cursor_y, color)}
+  def set(%{main: main, image: image, color: color, undo: undo} = state) do
+    new_image = Image.set(image, main.cursor_x, main.cursor_y, color)
+    %{state | image: new_image, undo: [state | undo], redo: []}
   end
 
   def set_and_next(state), do: state |> set() |> cursor_right()
 
-  def fill(%{image: image, color: color, main: main} = state) do
-    %{state | image: Image.fill(image, main.cursor_x, main.cursor_y, color)}
+  def fill(%{image: image, color: color, main: main, undo: undo} = state) do
+    new_image = Image.fill(image, main.cursor_x, main.cursor_y, color)
+    %{state | image: new_image, undo: [state | undo], redo: []}
+  end
+
+  def undo(%{undo: []} = state), do: state
+  def undo(%{undo: [old_state | old_states], redo: redo} = state) do
+    %{old_state | undo: old_states, redo: [state | redo]}
+  end
+
+  def redo(%{redo: []} = state), do: state
+  def redo(%{redo: [old_state | old_states], undo: undo} = state) do
+    %{old_state | redo: old_states, undo: [state | undo]}
   end
 
   def refresh_if_needed(state, old_state) do

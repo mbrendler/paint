@@ -15,6 +15,9 @@ defmodule KeyMap do
       "" -> :set_and_next
       "f" -> :fill
 
+      "u" -> :undo
+      "R" -> :redo
+
       "r" -> :refresh
       "q" -> Process.exit(self(), :normal)
       _ -> nil

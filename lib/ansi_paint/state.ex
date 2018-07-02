@@ -5,7 +5,9 @@ defmodule State do
     image: nil,
     main: nil,
     status: nil,
-    command: nil
+    command: nil,
+    undo: [],
+    redo: []
   ]
 
   def new(filename, width, height, image) do
