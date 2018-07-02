@@ -58,6 +58,10 @@ defmodule Commands do
 
   def set_and_next(state), do: state |> set() |> cursor_right()
 
+  def fill(%{image: image, color: color, main: main} = state) do
+    %{state | image: Image.fill(image, main.cursor_x, main.cursor_y, color)}
+  end
+
   def refresh_if_needed(state, old_state) do
     should_refresh =
       state.main.scroll_x != old_state.main.scroll_x ||

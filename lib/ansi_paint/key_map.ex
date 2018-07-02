@@ -13,6 +13,7 @@ defmodule KeyMap do
       "p" -> :pick
       " " -> :set
       "" -> :set_and_next
+      "f" -> :fill
 
       "r" -> :refresh
       "q" -> Process.exit(self(), :normal)
@@ -20,7 +21,6 @@ defmodule KeyMap do
     end
   end
 
-  # 'f' => :cmd_fill,
   # 'u' => :cmd_undo,
   # 'R' => :cmd_redo,
   # 'H' => :scroll_left,
