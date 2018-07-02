@@ -14,17 +14,20 @@ defmodule Window do
     %__MODULE__{x: x, y: y, width: width, height: height}
   end
 
-  def refresh(%{scroll_y: scroll_y, height: height} = window, content) do
-    Terminal.set_cursor(0, 0)
+  def refresh(
+    %{x: x, y: y, scroll_y: scroll_y, height: height} = window,
+    content
+  ) do
+    Terminal.set_cursor(x, y)
     content
     |> Stream.drop(scroll_y)
     |> Stream.take(height)
     |> Stream.with_index()
-    |> Enum.each(fn {r, i} -> print_row(window, r, i) end)
+    |> Enum.each(fn {r, i} -> print_row(window, r, i + y) end)
   end
 
-  def print_row(%{scroll_x: scroll_x, width: width}, row, y) do
-    Terminal.set_cursor(0, y)
+  def print_row(%{x: x, scroll_x: scroll_x, width: width}, row, y) do
+    Terminal.set_cursor(x, y)
     row
     |> Stream.drop(scroll_x)
     |> Stream.take(width)
