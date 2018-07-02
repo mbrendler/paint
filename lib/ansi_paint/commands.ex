@@ -50,6 +50,14 @@ defmodule Commands do
     %{state | main: new_window}
   end
 
+  def pick(state), do: %{state | color: State.current_color(state)}
+
+  def set(%{main: main, image: image, color: color} = state) do
+    %{state | image: Image.set(image, main.cursor_x, main.cursor_y, color)}
+  end
+
+  def set_and_next(state), do: state |> set() |> cursor_right()
+
   def refresh_if_needed(state, old_state) do
     should_refresh =
       state.main.scroll_x != old_state.main.scroll_x ||

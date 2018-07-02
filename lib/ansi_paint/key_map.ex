@@ -9,7 +9,29 @@ defmodule KeyMap do
       "$" -> :end_of_line
       "g" -> :top
       "G" -> :bottom
+
+      "p" -> :pick
+      " " -> :set
+      "" -> :set_and_next
+
+      "r" -> :refresh
       "q" -> Process.exit(self(), :normal)
       _ -> nil
     end
   end
+
+  # 'f' => :cmd_fill,
+  # 'u' => :cmd_undo,
+  # 'R' => :cmd_redo,
+  # 'H' => :scroll_left,
+  # 'J' => :scroll_down,
+  # 'K' => :scroll_up,
+  # 'L' => :scroll_right,
+  # '' => :scroll_up,
+  # '' => :scroll_down,
+  # 'w' => :next_color,
+  # 'e' => :end_color,
+  # 'b' => :previous_color,
+  # ':' => :command,
+  # 'q' => :cmd_quit
+end
