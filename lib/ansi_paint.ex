@@ -5,8 +5,9 @@ defmodule AnsiPaint do
     # TODO: handle arguments
     IO.inspect(args)
 
-    image = load_image("../ansi-paint-rb/new.txt")
-    state = State.new(Tput.cols, Tput.lines, image)
+    filename = "../ansi-paint-rb/new.txt"
+    image = load_image(filename)
+    state = State.new(filename, Tput.cols, Tput.lines, image)
     Terminal.clear_screen()
     Window.refresh(state.main, image)
     Terminal.set_cursor(0, 0)
