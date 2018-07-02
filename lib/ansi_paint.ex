@@ -10,6 +10,7 @@ defmodule AnsiPaint do
     state = State.new(filename, Tput.cols, Tput.lines, image)
     Terminal.clear_screen()
     Window.refresh(state.main, image)
+    State.refresh_status_line(state)
     Terminal.set_cursor(0, 0)
     Terminal.run(fn -> main_loop(state) end)
   end

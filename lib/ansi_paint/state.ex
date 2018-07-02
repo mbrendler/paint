@@ -19,6 +19,16 @@ defmodule State do
     }
   end
 
+  def refresh_status_line(state) do
+    StatusLine.refresh(state.status, [
+      state.filename,
+      "  (#{state.main.cursor_x}, #{state.main.cursor_y})  ",
+      "#{current_color(state)} ",
+      " #{state.color} #{Tput.op()}",
+      "  (#{Image.width(state.image)},#{Image.height(state.image)})"
+    ])
+  end
+
   def current_color(%{image: image, main: main}) do
     Image.get(image, main.cursor_x, main.cursor_y)
   end

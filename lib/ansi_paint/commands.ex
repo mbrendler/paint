@@ -50,16 +50,23 @@ defmodule Commands do
     %{state | main: new_window}
   end
 
-  def refresh_if_needed(%{main: main} = state, %{main: old_main}) do
+  def refresh_if_needed(state, old_state) do
     should_refresh =
-      main.scroll_x != old_main.scroll_x ||
-      main.scroll_y != old_main.scroll_y
+      state.main.scroll_x != old_state.main.scroll_x ||
+      state.main.scroll_y != old_state.main.scroll_y ||
+      state.image != old_state.image
 
-    if should_refresh, do: refresh(state), else: refresh_cursor(state)
+    if should_refresh do
+      refresh(state)
+    else
+      State.refresh_status_line(state)
+      refresh_cursor(state)
+    end
   end
 
   def refresh(%{main: main, image: image} = state) do
     Window.refresh(main, image)
+    State.refresh_status_line(state)
     refresh_cursor(state)
   end
 
