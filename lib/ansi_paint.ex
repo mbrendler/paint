@@ -1,6 +1,7 @@
 defmodule AnsiPaint do
   def main(args) do
     Tput.start_link()
+    Stdin.start()
 
     # TODO: handle arguments
     IO.inspect(args)
@@ -16,7 +17,7 @@ defmodule AnsiPaint do
   end
 
   def main_loop(state) do
-    Terminal.get_key()
+    Stdin.get_key()
     |> KeyMap.handle()
     |> Commands.run(state)
     |> main_loop()

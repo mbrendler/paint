@@ -17,20 +17,6 @@ defmodule Terminal do
 
   def write(str), do: IO.write(str)
 
-  def getch, do: IO.getn('', 1)
-
-  # TODO: Get multiple chars when receiving \e.
-  def get_key, do: getch()
-  # def self.getkey
-  #   c = [Terminal.getch]
-  #   return c[0] if c[0] != ''
-  #   loop do
-  #     c << Timeout.timeout(0.1) { Terminal.getch }
-  #   end
-  # rescue Timeout::Error
-  #   c.join
-  # end
-
   def run(f) do
     tty_original_settings = tty_settings()
     try do
