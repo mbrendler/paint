@@ -32,6 +32,7 @@ defmodule Window do
     |> Stream.drop(scroll_x)
     |> Stream.take(width)
     |> Enum.each(fn c -> Terminal.write(c) end)
+    Terminal.clear_to_eol()
   end
 
   def change_cursor_x(
