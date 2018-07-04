@@ -14,7 +14,7 @@ defmodule StatusLine do
 
   def refresh(%{window: window, style: style}, content) do
     Window.refresh(window, [pretty_content(style, content)])
-    Terminal.clear_to_eol()
+    clear_style()
   end
 
   defp pretty_content(style, content) do
@@ -27,5 +27,9 @@ defmodule StatusLine do
       Tput.italic <>
       Tput.background_color(25) <>
       Tput.foreground_color(231)
+  end
+
+  def clear_style do
+    Terminal.write([Tput.op(), Tput.reset()])
   end
 end
