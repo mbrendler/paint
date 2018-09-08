@@ -16,7 +16,7 @@ defmodule KeyMap do
       "f" -> :fill
 
       "u" -> :undo
-      "R" -> :redo
+      "" -> :redo
 
       "r" -> :refresh
       ":" -> :command_line
