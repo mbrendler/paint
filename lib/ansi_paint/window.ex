@@ -56,7 +56,7 @@ defmodule Window do
   end
 
   defp change_cursor_pos(window_size, scroll, new_value, content_size) do
-    new_cursor = new_value - scroll
+    new_cursor = min(new_value, content_size - 1) - scroll
     cond do
       new_cursor < 0 ->
         {0, max(0, new_value)}
