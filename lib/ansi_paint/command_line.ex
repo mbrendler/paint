@@ -27,7 +27,7 @@ defmodule CommandLine do
   end
 
   def refresh(%{window: window, text: text}, prefix \\ " ") do
-    Window.refresh(%{window | cursor_x: 0}, [[prefix, text]])
+    Window.refresh(%{window | cursor_x: 0}, [[prefix, text, " "]])
   end
 
   def loop(%{window: %{cursor_x: cursor_x}} = cl) do
@@ -60,14 +60,14 @@ defmodule CommandLine do
   end
 
   def cursor_left(%{window: window, text: text} = cl, count \\ 1) do
-    text_width = String.length(text)
+    text_width = String.length(text) + 1
     new_x = window.scroll_x + window.cursor_x - count
     new_window = Window.change_cursor_x(window, new_x, text_width)
     %{cl | window: new_window}
   end
 
   def cursor_right(%{window: window, text: text} = cl, count \\ 1) do
-    text_width = String.length(text)
+    text_width = String.length(text) + 1
     new_x = window.scroll_x + window.cursor_x + count
     new_window =
       if new_x > text_width do
