@@ -19,6 +19,7 @@ defmodule KeyMap do
       "R" -> :redo
 
       "r" -> :refresh
+      ":" -> :command_line
       "q" -> Process.exit(self(), :normal)
       _ -> nil
     end

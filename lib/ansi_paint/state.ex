@@ -17,7 +17,7 @@ defmodule State do
       image: image,
       main: Window.new(0, 0, width, height - 2),
       status: StatusLine.new(height - 2, width),
-      command: Window.new(0, height - 1, width, 1)
+      command: CommandLine.new(height - 1, width)
     }
   end
 

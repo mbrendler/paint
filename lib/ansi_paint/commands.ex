@@ -86,6 +86,13 @@ defmodule Commands do
     %{old_state | redo: old_states, undo: [state | undo]}
   end
 
+  def command_line(%{command: command_line} = state, _) do
+    new_command_line = CommandLine.run(command_line)
+    new_command_line.text
+    |> String.split()
+    |> run(%{state | command: new_command_line})
+  end
+
   def refresh_if_needed(state, old_state) do
     should_refresh =
       state.main.scroll_x != old_state.main.scroll_x ||
