@@ -13,6 +13,9 @@ defmodule Commands do
     apply(__MODULE__, name, [state, []]) |> refresh_if_needed(state)
   end
 
+  def quit(_, _), do: Process.exit(self(), :normal)
+  def q(_, _), do: quit(nil, nil)
+
   def cursor_left(%{main: main, image: image} = state, _) do
     new_x = main.scroll_x + main.cursor_x - 1
     new_window = Window.change_cursor_x(main, new_x, Image.width(image))

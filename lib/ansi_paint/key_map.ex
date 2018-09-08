@@ -20,7 +20,7 @@ defmodule KeyMap do
 
       "r" -> :refresh
       ":" -> :command_line
-      "q" -> Process.exit(self(), :normal)
+      "q" -> :quit
       _ -> nil
     end
   end
