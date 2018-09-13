@@ -40,23 +40,23 @@ defmodule Commands do
     %{state | main: new_window}
   end
 
-  def start_of_line(%{main: main, image: image} = state, _) do
+  def cursor_start_of_line(%{main: main, image: image} = state, _) do
     new_window = Window.change_cursor_x(main, 0, Image.width(image))
     %{state | main: new_window}
   end
 
-  def end_of_line(%{main: main, image: image} = state, _) do
+  def cursor_end_of_line(%{main: main, image: image} = state, _) do
     width = Image.width(image)
     new_window = Window.change_cursor_x(main, width - 1, width)
     %{state | main: new_window}
   end
 
-  def top(%{main: main, image: image} = state, _) do
+  def cursor_top(%{main: main, image: image} = state, _) do
     new_window = Window.change_cursor_y(main, 0, Image.height(image))
     %{state | main: new_window}
   end
 
-  def bottom(%{main: main, image: image} = state, _) do
+  def cursor_bottom(%{main: main, image: image} = state, _) do
     height = Image.height(image)
     new_window = Window.change_cursor_y(main, height - 1, height)
     %{state | main: new_window}
