@@ -25,8 +25,6 @@ defmodule KeyMap do
     end
   end
 
-  # 'u' => :cmd_undo,
-  # 'R' => :cmd_redo,
   # 'H' => :scroll_left,
   # 'J' => :scroll_down,
   # 'K' => :scroll_up,
@@ -36,6 +34,4 @@ defmodule KeyMap do
   # 'w' => :next_color,
   # 'e' => :end_color,
   # 'b' => :previous_color,
-  # ':' => :command,
-  # 'q' => :cmd_quit
 end
