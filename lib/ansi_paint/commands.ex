@@ -96,13 +96,14 @@ defmodule Commands do
     |> run(%{state | command: new_command_line})
   end
 
-  def refresh_if_needed(state, old_state) do
-    should_refresh =
-      state.main.scroll_x != old_state.main.scroll_x ||
+  def should_refresh(state, old_state) do
+    state.main.scroll_x != old_state.main.scroll_x ||
       state.main.scroll_y != old_state.main.scroll_y ||
       state.image != old_state.image
+  end
 
-    if should_refresh do
+  def refresh_if_needed(state, old_state) do
+    if should_refresh(state, old_state) do
       refresh(state)
     else
       State.refresh_status_line(state)
