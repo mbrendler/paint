@@ -31,6 +31,12 @@ defmodule State do
     ])
   end
 
+  def command_line_set_text(state, text) do
+    command = CommandLine.set_text(state.command, text)
+    CommandLine.refresh(command)
+    %__MODULE__{state | command: command}
+  end
+
   def current_color(%{image: image, main: main}) do
     Image.get(image, main.cursor_x, main.cursor_y)
   end

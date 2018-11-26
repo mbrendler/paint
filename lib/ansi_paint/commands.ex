@@ -22,15 +22,12 @@ defmodule Commands do
     run([String.to_atom(cmd) | args], state)
   end
   def run([cmd | args], state) do
-    mod = @commands[cmd]
-    case mod do
-      nil -> state
-      _ -> apply(mod, cmd, [state, args]) # |> refresh_if_needed(state)
+    case @commands[cmd] do
+      nil -> State.command_line_set_text(state, "unknown command '#{cmd}'")
+      mod -> apply(mod, cmd, [state, args]) |> refresh_if_needed(state)
     end
   end
-  def run(cmd, state) do
-    run([cmd], state) |> refresh_if_needed(state)
-  end
+  def run(cmd, state), do: run([cmd], state)
 
   def should_refresh(state, old_state) do
     state.main.scroll_x != old_state.main.scroll_x ||
