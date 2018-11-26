@@ -1,99 +1,37 @@
 defmodule Commands do
+  require Commands.Cursor
+  require Commands.LifeCycle
+
+  @commands [
+    Commands.Cursor,
+    Commands.LifeCycle,
+    Commands.Paint,
+  ]
+  |> Enum.flat_map(
+    fn mod ->
+      mod.__info__(:functions)
+      |> Enum.filter(fn {_, c} -> c == 2 end)
+      |> Enum.map(fn {k, _} -> {k, mod} end)
+    end
+  )
+  |> Enum.into(%{})
+
+  def lala, do: @commands
+
   def run(nil, state), do: state
   def run([], state), do: state
+  def run([cmd | args], state) when is_binary(cmd) do
+    run([String.to_atom(cmd) | args], state)
+  end
   def run([cmd | args], state) do
-    cmd = String.to_atom(cmd)
-    cardinalities = Keyword.get_values(__info__(:functions), cmd)
-    cond do
-      Enum.member?(cardinalities, 2) -> apply(__MODULE__, cmd, [state, args])
-      true -> state
+    mod = @commands[cmd]
+    case mod do
+      nil -> state
+      _ -> apply(mod, cmd, [state, args]) # |> refresh_if_needed(state)
     end
   end
-  def run(name, state) do
-    apply(__MODULE__, name, [state, []]) |> refresh_if_needed(state)
-  end
-
-  def quit(_, _), do: Process.exit(self(), :normal)
-  def q(_, _), do: quit(nil, nil)
-
-  def cursor_left(%{main: main, image: image} = state, _) do
-    new_x = main.scroll_x + main.cursor_x - 1
-    new_window = Window.change_cursor_x(main, new_x, Image.width(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_down(%{main: main, image: image} = state, _) do
-    new_y = main.scroll_y + main.cursor_y + 1
-    new_window = Window.change_cursor_y(main, new_y, Image.height(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_up(%{main: main, image: image} = state, _) do
-    new_y = main.scroll_y + main.cursor_y - 1
-    new_window = Window.change_cursor_y(main, new_y, Image.height(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_right(%{main: main, image: image} = state, _) do
-    new_x = main.scroll_x + main.cursor_x + 1
-    new_window = Window.change_cursor_x(main, new_x, Image.width(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_start_of_line(%{main: main, image: image} = state, _) do
-    new_window = Window.change_cursor_x(main, 0, Image.width(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_end_of_line(%{main: main, image: image} = state, _) do
-    width = Image.width(image)
-    new_window = Window.change_cursor_x(main, width - 1, width)
-    %{state | main: new_window}
-  end
-
-  def cursor_top(%{main: main, image: image} = state, _) do
-    new_window = Window.change_cursor_y(main, 0, Image.height(image))
-    %{state | main: new_window}
-  end
-
-  def cursor_bottom(%{main: main, image: image} = state, _) do
-    height = Image.height(image)
-    new_window = Window.change_cursor_y(main, height - 1, height)
-    %{state | main: new_window}
-  end
-
-  def pick(state, []), do: %{state | color: State.current_color(state)}
-  def pick(state, [color_number]) do
-    %{state | color: "#{Tput.background_color(color_number)} "}
-  end
-
-  def set(%{main: main, image: image, color: color, undo: undo} = state, _) do
-    new_image = Image.set(image, main.cursor_x, main.cursor_y, color)
-    %{state | image: new_image, undo: [state | undo], redo: []}
-  end
-
-  def set_and_next(state, args), do: state |> set(args) |> cursor_right([])
-
-  def fill(%{image: image, color: color, main: main, undo: undo} = state, _) do
-    new_image = Image.fill(image, main.cursor_x, main.cursor_y, color)
-    %{state | image: new_image, undo: [state | undo], redo: []}
-  end
-
-  def undo(%{undo: []} = state, _), do: state
-  def undo(%{undo: [old_state | old_states], redo: redo} = state, _) do
-    %{old_state | undo: old_states, redo: [state | redo]}
-  end
-
-  def redo(%{redo: []} = state, _), do: state
-  def redo(%{redo: [old_state | old_states], undo: undo} = state, _) do
-    %{old_state | redo: old_states, undo: [state | undo]}
-  end
-
-  def command_line(%{command: command_line} = state, _) do
-    new_command_line = CommandLine.run(command_line)
-    new_command_line.text
-    |> String.split()
-    |> run(%{state | command: new_command_line})
+  def run(cmd, state) do
+    run([cmd], state) |> refresh_if_needed(state)
   end
 
   def should_refresh(state, old_state) do
@@ -104,21 +42,10 @@ defmodule Commands do
 
   def refresh_if_needed(state, old_state) do
     if should_refresh(state, old_state) do
-      refresh(state)
+      Commands.LifeCycle.refresh(state)
     else
       State.refresh_status_line(state)
-      refresh_cursor(state)
+      Commands.LifeCycle.refresh_cursor(state)
     end
-  end
-
-  def refresh(%{main: main, image: image} = state, _ \\ nil) do
-    Window.refresh(main, image)
-    State.refresh_status_line(state)
-    refresh_cursor(state)
-  end
-
-  def refresh_cursor(%{main: main} = state, _ \\ nil) do
-    Terminal.set_cursor(main.cursor_x, main.cursor_y)
-    state
   end
 end
