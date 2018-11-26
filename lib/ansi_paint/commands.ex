@@ -16,8 +16,6 @@ defmodule Commands do
   )
   |> Enum.into(%{})
 
-  def lala, do: @commands
-
   def run(nil, state), do: state
   def run([], state), do: state
   def run([cmd | args], state) when is_binary(cmd) do
