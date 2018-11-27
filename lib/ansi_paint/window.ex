@@ -16,23 +16,30 @@ defmodule Window do
 
   def refresh(
     %{x: x, y: y, scroll_y: scroll_y, height: height} = window,
-    content
+    content,
+    opts \\ []
   ) do
+    clear_to_eol = Keyword.get(opts, :clear_to_eol, true)
     Terminal.set_cursor(x, y)
     content
     |> Stream.drop(scroll_y)
     |> Stream.take(height)
     |> Stream.with_index()
-    |> Enum.each(fn {r, i} -> print_row(window, r, i + y) end)
+    |> Enum.each(fn {r, i} -> print_row(window, r, i + y, clear_to_eol) end)
   end
 
-  def print_row(%{x: x, scroll_x: scroll_x, width: width}, row, y) do
+  def print_row(
+    %{x: x, scroll_x: scroll_x, width: width},
+    row,
+    y,
+    clear_to_eol
+  ) do
     Terminal.set_cursor(x, y)
     row
     |> Stream.drop(scroll_x)
     |> Stream.take(width)
     |> Enum.each(fn c -> Terminal.write(c) end)
-    Terminal.clear_to_eol()
+    if clear_to_eol, do: Terminal.clear_to_eol()
   end
 
   def change_cursor_x(
