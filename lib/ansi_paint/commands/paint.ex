@@ -17,4 +17,13 @@ defmodule Commands.Paint do
     new_image = Image.fill(image, main.cursor_x, main.cursor_y, color)
     %{state | image: new_image, undo: [state | undo], redo: []}
   end
+
+  def palette(state, _) do
+    palette = Palette.new()
+    state = case Palette.run(palette) do
+      nil -> state
+      color_number -> pick(state, [color_number])
+    end
+    Commands.LifeCycle.refresh(state, nil)
+  end
 end
