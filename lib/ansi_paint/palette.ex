@@ -9,12 +9,18 @@ defmodule Palette do
   def content do
     op = Tput.op()
     (0..255)
-    |> Enum.map(fn i -> "#{Tput.background_color(i)} #{op}" end)
+    |> Enum.map(&"#{Tput.background_color(&1)} #{op}")
     |> Enum.chunk_every(@width)
     |> Enum.concat([["                "]])
   end
 
-  def run(palette) do
+  def run(palette, color \\ nil) do
+    color_number = Tput.background_color_number(color)
+    palette = %Window{
+      palette |
+      cursor_x: rem(color_number, @width),
+      cursor_y: div(color_number, @width)
+    }
     Window.refresh(palette, content(), clear_to_eol: false)
     loop(palette)
   end

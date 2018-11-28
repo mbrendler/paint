@@ -20,7 +20,7 @@ defmodule Commands.Paint do
 
   def palette(state, _) do
     palette = Palette.new()
-    state = case Palette.run(palette) do
+    state = case Palette.run(palette, state.color) do
       nil -> state
       color_number -> pick(state, [color_number])
     end

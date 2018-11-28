@@ -19,6 +19,12 @@ defmodule Tput do
 
   def foreground_color(number), do: tput(["setaf", to_string(number)])
 
+  def background_color_number(""), do: 0
+  def background_color_number(str) do
+    str = String.replace(str, op(), "")
+    Enum.find((0..255), 0, &String.starts_with?(str, background_color(&1)))
+  end
+
   def set_cursor(x, y), do: tput(["cup", to_string(y), to_string(x)])
 
   # TODO: We can not get the correct terminal width within an escript. Why?
