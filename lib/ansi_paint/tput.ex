@@ -43,7 +43,8 @@ defmodule Tput do
   end
 
   defp _tput(args) do
-    {escape_sequence, 0} = System.cmd("tput", ["-Tscreen-256color" | args])
+    term = System.get_env("TERM") || "xterm-256color"
+    {escape_sequence, 0} = System.cmd("tput", ["-T", term | args])
     # {escape_sequence, 0} = System.cmd("tput", args)
     escape_sequence
   end
