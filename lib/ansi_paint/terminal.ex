@@ -17,6 +17,20 @@ defmodule Terminal do
 
   def write(str), do: IO.write(str)
 
+  def cols do
+    stty(["size"])
+    |> String.split()
+    |> List.last()
+    |> String.to_integer()
+  end
+
+  def lines do
+    stty(["size"])
+    |> String.split()
+    |> List.first()
+    |> String.to_integer()
+  end
+
   def run(f) do
     tty_original_settings = tty_settings()
     try do
@@ -27,12 +41,13 @@ defmodule Terminal do
     end
   end
 
-  # TODO: We can not get data from stty within an escript. Why?
-  defp tty_settings do
-    # {result, 0} = System.cmd("stty", ["-g"])
-    # result
-  end
+  defp tty_settings, do: stty(["-g"])
 
-  # TODO: We can not set data with stty within an escript. Why?
-  defp set_tty_settings(_settings), do: nil # System.cmd("stty", settings)
+  defp set_tty_settings(settings), do: stty(settings)
+
+  defp stty(args) do
+    tty = System.get_env("TTY")
+    {result, 0} = System.cmd("stty", ["-F", tty | args])
+    result
+  end
 end

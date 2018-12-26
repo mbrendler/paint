@@ -3,9 +3,7 @@
 set -euo pipefail
 
 readonly DEFAULT_STTY="$(stty -g)"
-
-export columns;columns="$(tput cols)"
-export lines;lines="$(tput lines)"
+export TTY;TTY="$(tty)"
 
 function clean-stty() {
   stty "$DEFAULT_STTY"

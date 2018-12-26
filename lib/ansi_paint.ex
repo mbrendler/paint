@@ -8,7 +8,7 @@ defmodule AnsiPaint do
 
     filename = "../ansi-paint-rb/new.txt"
     image = load_image(filename)
-    state = State.new(filename, Tput.cols, Tput.lines, image)
+    state = State.new(filename, Terminal.cols(), Terminal.lines(), image)
     Terminal.clear_screen()
     Window.refresh(state.main, image)
     State.refresh_status_line(state)

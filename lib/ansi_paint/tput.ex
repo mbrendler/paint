@@ -21,17 +21,10 @@ defmodule Tput do
 
   def background_color_number(""), do: 0
   def background_color_number(str) do
-    str = String.replace(str, op(), "")
-    Enum.find((0..255), 0, &String.starts_with?(str, background_color(&1)))
+    Enum.find((0..255), 0, &String.contains?(str, background_color(&1)))
   end
 
   def set_cursor(x, y), do: tput(["cup", to_string(y), to_string(x)])
-
-  # TODO: We can not get the correct terminal width within an escript. Why?
-  def cols, do: System.get_env("columns") |> String.to_integer()
-
-  # TODO: We can not get the correct terminal height within an escript. Why?
-  def lines, do: System.get_env("lines") |> String.to_integer()
 
   def tput(args), do: GenServer.call(__MODULE__, {:tput, args})
 
@@ -51,6 +44,7 @@ defmodule Tput do
 
   defp _tput(args) do
     {escape_sequence, 0} = System.cmd("tput", ["-Tscreen-256color" | args])
+    # {escape_sequence, 0} = System.cmd("tput", args)
     escape_sequence
   end
 
