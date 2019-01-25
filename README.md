@@ -1,4 +1,4 @@
-# AnsiPaint
+# Paint
 
 Paint sweet pictures in terminal.
 
@@ -12,5 +12,5 @@ $ mix escript.build
 ## Run
 
 ```sh
-$ ./paint.sh FILE
+$ ./paint.sh [FILE]
 ```

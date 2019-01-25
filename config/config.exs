@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :ansi_paint, key: :value
+#     config :paint, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:ansi_paint, :key)
+#     Application.get_env(:paint, :key)
 #
 # You can also configure a 3rd-party app:
 #

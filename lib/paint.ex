@@ -1,4 +1,4 @@
-defmodule AnsiPaint do
+defmodule Paint do
   def main(args) do
     Tput.start_link()
     Stdin.start()

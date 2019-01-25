@@ -1,12 +1,12 @@
-defmodule AnsiPaint.MixProject do
+defmodule Paint.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ansi_paint,
+      app: :paint,
       version: "0.1.0",
       elixir: "~> 1.6",
-      escript: [main_module: AnsiPaint, name: "paint"],
+      escript: [main_module: Paint, name: "paint"],
       deps: deps()
     ]
   end
