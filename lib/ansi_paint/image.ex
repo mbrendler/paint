@@ -21,7 +21,7 @@ defmodule Image do
     new_row =
       image
       |> Enum.at(y)
-      |> List.replace_at(x, value)
+      |> List.replace_at(x, value <> Tput.op())
     List.replace_at(image, y, new_row)
   end
 
