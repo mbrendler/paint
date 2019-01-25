@@ -3,11 +3,7 @@ defmodule AnsiPaint do
     Tput.start_link()
     Stdin.start()
 
-    # TODO: handle arguments
-    IO.inspect(args)
-
-    filename = "../ansi-paint-rb/new.txt"
-    image = load_image(filename)
+    {filename, image} = get_image(args)
     state = State.new(filename, Terminal.cols(), Terminal.lines(), image)
     Terminal.clear_screen()
     Window.refresh(state.main, image)
@@ -22,6 +18,9 @@ defmodule AnsiPaint do
     |> Commands.run(state)
     |> main_loop()
   end
+
+  def get_image([]), do: {"new.txt", Image.new(10, 10)}
+  def get_image([filename | _]), do: {filename, load_image(filename)}
 
   def load_image(filename), do: filename |> File.stream!() |> Image.parse()
 end

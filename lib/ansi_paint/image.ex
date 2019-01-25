@@ -1,4 +1,6 @@
 defmodule Image do
+  def new(width, height), do: List.duplicate(List.duplicate(" ", height), width)
+
   def parse(stream) do
     stream
     |> Enum.map(&parse_line/1)
